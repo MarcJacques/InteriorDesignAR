@@ -10,7 +10,14 @@ import RealityKit
 
 struct ContentView : View {
     var body: some View {
-        return ARViewContainer().edgesIgnoringSafeArea(.all)
+        ZStack(alignment: .bottom) {
+            
+            ARViewContainer()
+            
+            ControlView()
+            
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
