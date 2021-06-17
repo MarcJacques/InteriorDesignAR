@@ -7,24 +7,49 @@
 
 import SwiftUI
 struct ControlView: View {
+    @Binding var isControlsVisible: Bool
+    
     var body: some View {
         VStack {
             
-            ControlVisibilityToggleButton()
+            ControlVisibilityToggleButton(isControlsVisible: $isControlsVisible)
             
             Spacer()
             
-            ControlButtonBar()
-            
+            if isControlsVisible {
+                ControlButtonBar()
+            }
         }
     }
 }
 
 struct ControlVisibilityToggleButton: View {
+    @Binding var isControlsVisible: Bool
+    
     var body: some View {
         HStack {
             
+            Spacer()
+            
+            ZStack {
+                
+                Color.black.opacity(0.25)
+                
+                Button(action: {
+                    print("Control Visibility Toggle Button pressed.")
+                    self.isControlsVisible.toggle()
+                }) {
+                    Image(systemName: self.isControlsVisible ? "rectangle" : "slider.horizontal.below.rectangle")
+                        .font(.system(size: 25))
+                        .foregroundColor(.white)
+                        .buttonStyle(PlainButtonStyle())
+                }
+            }
+            .frame(width: 50, height: 50)
+            .cornerRadius(8.0)
         }
+        .padding(.top, 45)
+        .padding(.trailing, 20)
     }
     
 }
@@ -73,6 +98,6 @@ struct ControlButton: View {
                 .buttonStyle(PlainButtonStyle())
         }
         .frame(width: 50, height: 50)
-    
+        
     }
 }
