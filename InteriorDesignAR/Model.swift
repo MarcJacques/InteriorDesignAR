@@ -45,9 +45,24 @@ class Model {
         self.thumbnail = UIImage(named: name) ?? UIImage(systemName: "photo")!
 //        self.scaleCompensation = scaleCompensation
     }
-    
-//    TODO: add a method to async load modelEntity
-//    generate thumbnails from usdz files
+    func asyncLoadModelEntity() {
+        let filename = self.name + ".usdz"
+        ModelEntity.loadModelAsync(named: filename)
+            .sink(receiveCompletion: { loadCompletion in
+                
+                switch loadCompletion {
+                case .failure(let error): print("Unable to load modelEntity for \(filename). Error: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            }, receiveValue: { modelEntity in
+                
+                self.modelEntity = modelEntity
+                self.modelEntity?.scale *= self.scaleCompensation
+                
+                print("modelEntity for \(self.name) has been loaded.")
+            })
+    }
 }
 
 struct Models {
