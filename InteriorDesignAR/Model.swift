@@ -37,17 +37,20 @@ class Model {
     var category: ModelCategory
     var thumbnail: UIImage
     var modelEntity: ModelEntity?
-//    var scaleCompensation: Float
+    var scaleCompensation: Float
+    
+    private var cancellable: AnyCancellable?
     
     init(name: String, category: ModelCategory, scaleCompensation: Float = 1.0) {
         self.name = name
         self.category = category
         self.thumbnail = UIImage(named: name) ?? UIImage(systemName: "photo")!
-//        self.scaleCompensation = scaleCompensation
+        self.scaleCompensation = scaleCompensation
     }
     func asyncLoadModelEntity() {
         let filename = self.name + ".usdz"
-        ModelEntity.loadModelAsync(named: filename)
+        
+        self.cancellable = ModelEntity.loadModelAsync(named: filename)
             .sink(receiveCompletion: { loadCompletion in
                 
                 switch loadCompletion {
