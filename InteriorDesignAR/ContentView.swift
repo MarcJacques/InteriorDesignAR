@@ -58,10 +58,29 @@ struct ARViewContainer: UIViewRepresentable {
         //Add model to scene if confirmed for placement
         if let confirmedModel = self.placementSettings.confirmedModel, let modelEntity = confirmedModel.modelEntity {
             
-            //TODO: Call place method
+            self.place(modelEntity, in: arView)
             
             self.placementSettings.confirmedModel = nil
         }
+    }
+    
+    private func place(_ modelEntity: ModelEntity, in arView: ARView) {
+        
+        //1. Clone modelEntity to create an identical copy of ModelEntity and refer to the same model. This gives us multiple models of the same asset in our scnene.
+        let clonedEntity = modelEntity.clone(recursive: true)
+        
+        //2. This allows for translation and rotation gestures.
+        clonedEntity.generateCollisionShapes(recursive: true)
+        arView.installGestures([.translation, .rotation], for: clonedEntity)
+        
+        //3. Create an anchorEntity and add clonedEntity to the anchorEntity.
+        let anchorEntity = AnchorEntity(plane: .any)
+        anchorEntity.addChild(clonedEntity)
+        
+        //4. Add anchorEntity to the arvView.scene
+        arView.scene.addAnchor(anchorEntity)
+        
+        print("Added modelEntity to scene.")
     }
     
 }
