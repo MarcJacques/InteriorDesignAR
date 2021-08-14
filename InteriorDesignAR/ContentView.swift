@@ -39,8 +39,9 @@ struct ARViewContainer: UIViewRepresentable {
         //Subscribe to SceneEvents.Update
         self.placementSettings.sceneObserver = arView.scene.subscribe(to: SceneEvents.Update.self, { (event) in
             
+            self.updateScene(for: arView)
             
-            //TODO: call updateScene method
+            
         })
         
         return arView
@@ -48,6 +49,20 @@ struct ARViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CustomARView, context: Context) {}
+    
+    private func updateScene(for arView: CustomARView) {
+        
+        //Only display focusEntity when the user has selected a model for placement
+        arView.focusEntity?.isEnabled = self.placementSettings.selectedModel != nil
+        
+        //Add model to scene if confirmed for placement
+        if let confirmedModel = self.placementSettings.confirmedModel, let modelEntity = confirmedModel.modelEntity {
+            
+            //TODO: Call place method
+            
+            self.placementSettings.confirmedModel = nil
+        }
+    }
     
 }
 
