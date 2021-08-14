@@ -30,10 +30,18 @@ struct ContentView : View {
 }
 
 struct ARViewContainer: UIViewRepresentable {
+    @EnvironmentObject var placementSettings: PlacementSettings
     
     func makeUIView(context: Context) -> CustomARView {
         
         let arView = CustomARView(frame: .zero)
+        
+        //Subscribe to SceneEvents.Update
+        self.placementSettings.sceneObserver = arView.scene.subscribe(to: SceneEvents.Update.self, { (event) in
+            
+            
+            //TODO: call updateScene method
+        })
         
         return arView
         
